@@ -1,9 +1,7 @@
 # Projeto-PROO
-Projeto de Programação Orientada a Objetos - IFAL 2016.1
+Projeto de Programação Orientada a Objetos - IFAL 2016.2
 
-	Dupla:
-		- Pedro Ivo Mariano de Oliveira Barros
-		- Kayo Lucas Oliveira Lima
+Aluno: Pedro Ivo Mariano de Oliveira Barros
 
 Sistema Escola Integrada (SEI)
 
