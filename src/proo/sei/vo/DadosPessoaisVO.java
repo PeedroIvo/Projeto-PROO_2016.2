@@ -1,12 +1,12 @@
-package proo.sei.mo;
+package proo.sei.vo;
 
-public class DadosPessoais {
+public class DadosPessoaisVO {
 	private String cpf;
 	private String rg;
 	private String email;
 	private String telefone;
 	private String celular;
-	private Endereco endereco = new Endereco();
+	private EnderecoVO endereco = new EnderecoVO();
 
 	public String getCpf() {
 		return cpf;
@@ -48,11 +48,11 @@ public class DadosPessoais {
 		this.celular = celular;
 	}
 
-	public Endereco getEndereco() {
+	public EnderecoVO getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(EnderecoVO endereco) {
 		this.endereco = endereco;
 	}
 }

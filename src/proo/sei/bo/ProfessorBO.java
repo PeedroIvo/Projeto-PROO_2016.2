@@ -4,17 +4,21 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import proo.sei.mo.Aluno;
-import proo.sei.mo.Disciplina;
-import proo.sei.mo.Nota;
-import proo.sei.mo.Professor;
+import proo.sei.view.ProfessorView;
+import proo.sei.vo.AlunoVO;
+import proo.sei.vo.DisciplinaVO;
+import proo.sei.vo.NotaVO;
+import proo.sei.vo.ProfessorVO;
 
 public class ProfessorBO extends UsuarioBO {
+	
+	ProfessorView professorView = new ProfessorView(); 
+	
 	public ProfessorBO() {
 
 	}
 	
-	public ProfessorBO(Professor usuarioAtual) {
+	public ProfessorBO(ProfessorVO usuarioAtual) {
 		super(usuarioAtual);
 	}
 
@@ -24,24 +28,7 @@ public class ProfessorBO extends UsuarioBO {
 		int opcao;
 		
 		do {
-			System.out.println("-------------------------------------");
-			System.out.println("Olá, " + professor.getNome() + "! O que deseja fazer?");
-			System.out.println("[1] Visualizar suas disciplinas");
-			System.out.println("[2] Adicionar notas");
-			System.out.println("[3] Visualizar dados pessoais");
-			System.out.println("[4] Mudar a senha");
-			System.out.println("[5] Logout");
-
-			do {
-				System.out.print("Digite sua opção: ");
-				opcao = input.nextInt();
-
-				if (opcao <= 0 || opcao > 5) {
-					System.out.println("Opção inválida! Tente novamente!");
-				}
-			} while (opcao <= 0 || opcao > 5);
-			
-			System.out.println();
+			opcao = professorView.interfaceMenu(professor.getNome());
 
 			if (opcao == 1) {
 				this.visualizarDisciplinas();
@@ -57,12 +44,12 @@ public class ProfessorBO extends UsuarioBO {
 	
 	public void visualizarDisciplinas() throws SQLException {
 		
-		List<Disciplina> disciplinas = disciplinaDAO.listarPorProfessor(conexao, professor.getCodUsuario());
+		List<DisciplinaVO> disciplinas = disciplinaDAO.listarPorProfessor(conexao, professor.getCodUsuario());
 		
 		if(disciplinas.isEmpty()){
 			System.out.println("No momento, você não é responsável por nenhuma disciplina!");
 		} else {
-			for (Disciplina disciplina:disciplinas) {
+			for (DisciplinaVO disciplina:disciplinas) {
 				System.out.println("[" + disciplina.getCodDisciplina() + "] " + disciplina.getSigla() + " (" + disciplina.getNome() + ") | " + disciplina.getSerie() + "º Ano");
 			}
 		}
@@ -85,7 +72,7 @@ public class ProfessorBO extends UsuarioBO {
 		codDisciplina = this.input.nextInt();
 		
 		if(this.verificaDisciplinaProfessor(codDisciplina)) {
-			Disciplina disciplina = disciplinaDAO.procuraDisciplina(conexao, codDisciplina);
+			DisciplinaVO disciplina = disciplinaDAO.procuraDisciplina(conexao, codDisciplina);
 			
 			char turno;
 			
@@ -111,17 +98,17 @@ public class ProfessorBO extends UsuarioBO {
 			
 			int codTurma = turmaDAO.procuraCodTurma(conexao, disciplina.getSerie(), turno);
 			
-			List<Aluno> alunos = alunoDAO.listarPorTurma(conexao, codTurma);
+			List<AlunoVO> alunos = alunoDAO.listarPorTurma(conexao, codTurma);
 			
 			System.out.println();
 			
 			if(alunos.isEmpty()){
 				System.out.println("No momento, esta turma não tem nenhum aluno matriculado!");
 			} else {
-				List<Nota> notas = notaDAO.procuraListNota(conexao, codDisciplina, bimestre, codTurma);
+				List<NotaVO> notas = notaDAO.procuraListNota(conexao, codDisciplina, bimestre, codTurma);
 				
 				if(notas.isEmpty()){
-					for(Aluno aluno:alunos){
+					for(AlunoVO aluno:alunos){
 						double nota;
 						
 						do {
@@ -149,9 +136,9 @@ public class ProfessorBO extends UsuarioBO {
 	}
 	
 	public boolean verificaDisciplinaProfessor(int codDisciplina) throws SQLException {
-		List<Disciplina> disciplinas = disciplinaDAO.listarPorProfessor(conexao, professor.getCodUsuario());
+		List<DisciplinaVO> disciplinas = disciplinaDAO.listarPorProfessor(conexao, professor.getCodUsuario());
 		
-		for (Disciplina disciplina:disciplinas) {
+		for (DisciplinaVO disciplina:disciplinas) {
 			if(disciplina.getCodDisciplina() == codDisciplina) {
 				return true;
 			}
@@ -167,7 +154,7 @@ public class ProfessorBO extends UsuarioBO {
 		codDisciplina = input.nextInt();
 		
 		if(this.verificaDisciplinaProfessor(codDisciplina)) {
-			Disciplina disciplina = disciplinaDAO.procuraDisciplina(conexao, codDisciplina);
+			DisciplinaVO disciplina = disciplinaDAO.procuraDisciplina(conexao, codDisciplina);
 			
 			char turno;
 			
@@ -183,42 +170,42 @@ public class ProfessorBO extends UsuarioBO {
 			
 			int codTurma = turmaDAO.procuraCodTurma(conexao, disciplina.getSerie(), turno);
 			
-			List<Aluno> alunos = alunoDAO.listarPorTurma(conexao, codTurma);
+			List<AlunoVO> alunos = alunoDAO.listarPorTurma(conexao, codTurma);
 			
 			System.out.println();
 			
 			if(alunos.isEmpty()){
 				System.out.println("No momento, esta turma não tem nenhum aluno matriculado!");
 			} else {
-				List<Nota> notasB1 = notaDAO.procuraListNota(conexao, codDisciplina, 1, codTurma);
-				List<Nota> notasB2 = notaDAO.procuraListNota(conexao, codDisciplina, 2, codTurma);
-				List<Nota> notasB3 = notaDAO.procuraListNota(conexao, codDisciplina, 3, codTurma);
-				List<Nota> notasB4 = notaDAO.procuraListNota(conexao, codDisciplina, 4, codTurma);
+				List<NotaVO> notasB1 = notaDAO.procuraListNota(conexao, codDisciplina, 1, codTurma);
+				List<NotaVO> notasB2 = notaDAO.procuraListNota(conexao, codDisciplina, 2, codTurma);
+				List<NotaVO> notasB3 = notaDAO.procuraListNota(conexao, codDisciplina, 3, codTurma);
+				List<NotaVO> notasB4 = notaDAO.procuraListNota(conexao, codDisciplina, 4, codTurma);
 				
 				System.out.println("Disciplina: " + disciplina.getSigla() + " (" + disciplina.getNome() + ") | " + disciplina.getSerie() + "º Ano | Turno: " + turno);
 				
-				for(Aluno aluno:alunos){     
+				for(AlunoVO aluno:alunos){     
 					double notaB1=0, notaB2=0, notaB3=0, notaB4=0;
 					
-					for(Nota nota:notasB1){
+					for(NotaVO nota:notasB1){
 						if(nota.getMatricAluno() == aluno.getCodUsuario()){
 							notaB1 = nota.getNota();
 						}
 					}
 					
-					for(Nota nota:notasB2){
+					for(NotaVO nota:notasB2){
 						if(nota.getMatricAluno() == aluno.getCodUsuario()){
 							notaB2 = nota.getNota();
 						}
 					}
 					
-					for(Nota nota:notasB3){
+					for(NotaVO nota:notasB3){
 						if(nota.getMatricAluno() == aluno.getCodUsuario()){
 							notaB3 = nota.getNota();
 						}
 					}
 					
-					for(Nota nota:notasB4){
+					for(NotaVO nota:notasB4){
 						if(nota.getMatricAluno() == aluno.getCodUsuario()){
 							notaB4 = nota.getNota();
 						}

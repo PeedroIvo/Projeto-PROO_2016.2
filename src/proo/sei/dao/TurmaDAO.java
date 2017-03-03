@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import proo.sei.mo.Turma;
+import proo.sei.vo.TurmaVO;
 
 public class TurmaDAO {
 	private AlunoDAO alunoDAO = new AlunoDAO();
@@ -18,16 +18,16 @@ public class TurmaDAO {
 				return rs.getInt("codTurma");
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return 0;
 	}
 	
-	public Turma procuraTurma(Connection conexao, int cod) throws SQLException {
+	public TurmaVO procuraTurma(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from turma where codTurma='" + cod + "'";
 		
-		Turma turma = this.selectTurma(conexao, sql);
+		TurmaVO turma = this.selectTurma(conexao, sql);
 		
 		if (turma != null) {
 			return turma;
@@ -36,11 +36,11 @@ public class TurmaDAO {
 		return null;
 	}
 	
-	public Turma selectTurma(Connection conexao, String sql) throws SQLException {
+	public TurmaVO selectTurma(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
-				Turma turma = new Turma();
+				TurmaVO turma = new TurmaVO();
 				
 				turma.setAno(rs.getInt("ano"));
 				turma.setCodTurma(rs.getInt("codTurma"));
@@ -53,7 +53,7 @@ public class TurmaDAO {
 				return turma;
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return null;

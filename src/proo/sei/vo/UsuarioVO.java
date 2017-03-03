@@ -1,6 +1,6 @@
-package proo.sei.mo;
+package proo.sei.vo;
 
-abstract public class Usuario {
+abstract public class UsuarioVO {
 	private int codUsuario;
 	private String login;
 	private String senha;

@@ -1,10 +1,10 @@
-package proo.sei.vo;
+package proo.sei.view;
 
 import java.util.Scanner;
 
 import proo.sei.bo.SessaoBO;
 
-public class SessaoVO {
+public class Sessao {
 	private Scanner input = new Scanner(System.in);
 	
 	private SessaoBO sessaoBO = new SessaoBO();

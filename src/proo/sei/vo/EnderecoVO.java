@@ -1,6 +1,6 @@
-package proo.sei.mo;
+package proo.sei.vo;
 
-public class Endereco {
+public class EnderecoVO {
 	private String cep;
 	private String rua;
 	private String nCasa;

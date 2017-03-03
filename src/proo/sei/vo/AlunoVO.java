@@ -1,16 +1,16 @@
-package proo.sei.mo;
+package proo.sei.vo;
 
-public class Aluno extends Usuario {
+public class AlunoVO extends UsuarioVO {
 	private int idade;
 	private char sexo;
 	private int codTurmaAtual;
-	private DadosPessoais dadosPessoais = new DadosPessoais();
+	private DadosPessoaisVO dadosPessoais = new DadosPessoaisVO();
 	
-	public DadosPessoais getDadosPessoais() {
+	public DadosPessoaisVO getDadosPessoais() {
 		return dadosPessoais;
 	}
 
-	public void setDadosPessoais(DadosPessoais dadosPessoais) {
+	public void setDadosPessoais(DadosPessoaisVO dadosPessoais) {
 		this.dadosPessoais = dadosPessoais;
 	}
 

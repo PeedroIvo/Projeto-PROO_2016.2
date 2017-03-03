@@ -6,24 +6,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import proo.sei.dao.conexao.ConexaoMySQL;
-import proo.sei.mo.Usuario;
-import proo.sei.mo.Administrador;
-import proo.sei.mo.Aluno;
-import proo.sei.mo.Professor;
+import proo.sei.vo.AdministradorVO;
+import proo.sei.vo.AlunoVO;
+import proo.sei.vo.ProfessorVO;
+import proo.sei.vo.UsuarioVO;
 
 public class SessaoBO {
 	
 	private ConexaoMySQL mysql = new ConexaoMySQL();
 	private Connection conexao = mysql.getConexao("jdbc:mysql", "localhost:3306", "sei", "root", "");
 
-	private Usuario usuarioAtual;
+	private UsuarioVO usuarioAtual;
 	private UsuarioBO usuarioBOAtual;
 	
-	public Usuario getUsuarioAtual() {
+	public UsuarioVO getUsuarioAtual() {
 		return usuarioAtual;
 	}
 
-	public void setUsuarioAtual(Usuario usuarioAtual) {
+	public void setUsuarioAtual(UsuarioVO usuarioAtual) {
 		this.usuarioAtual = usuarioAtual;
 	}
 
@@ -46,20 +46,21 @@ public class SessaoBO {
 	public boolean validarLogin(Connection conexao, String loginDigitado, String senhaDigitada) {
 		try (PreparedStatement stmt = conexao.prepareStatement("select * from usuario where login='" + loginDigitado + "'");
 				ResultSet rs = stmt.executeQuery();) {
+			
 			if (rs.first()) {
 				if (rs.getString("senha").equals(senhaDigitada)) {					
 					if(rs.getString("tipoUsuario").equals("0")) {
-						Administrador adminAtual = new Administrador();
+						AdministradorVO adminAtual = new AdministradorVO();
 						
 						this.setUsuarioAtual(adminAtual);
 						this.setUsuarioBOAtual(new AdministradorBO(adminAtual));
 					} else if(rs.getString("tipoUsuario").equals("a")) {
-						Aluno alunoAtual = new Aluno();
+						AlunoVO alunoAtual = new AlunoVO();
 						
 						this.setUsuarioAtual(alunoAtual);
 						this.setUsuarioBOAtual(new AlunoBO(alunoAtual));
 					} else if(rs.getString("tipoUsuario").equals("p")) {
-						Professor professorAtual = new Professor();
+						ProfessorVO professorAtual = new ProfessorVO();
 						
 						this.setUsuarioAtual(professorAtual);
 						this.setUsuarioBOAtual(new ProfessorBO(professorAtual));
@@ -81,6 +82,7 @@ public class SessaoBO {
 				System.out.println("-------------------------------------");
 				System.out.println("Este login não está cadastrado! Tente novamente!");
 			}
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

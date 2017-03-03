@@ -7,14 +7,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import proo.sei.mo.Aluno;
-import proo.sei.mo.Usuario;
+import proo.sei.vo.AlunoVO;
+import proo.sei.vo.UsuarioVO;
 
 public class AlunoDAO extends UsuarioDAO{
 	private DadosPessoaisDAO dadosCRUD = new DadosPessoaisDAO();
 	
-	public void criar (Connection conexao, Aluno aluno) throws SQLException {
-		this.criarUsuario(conexao, (Usuario)aluno);
+	public void criar (Connection conexao, AlunoVO aluno) throws SQLException {
+		this.criarUsuario(conexao, (UsuarioVO)aluno);
 		
 		aluno.setCodUsuario(this.pegarCodigo(conexao, aluno.getLogin()));
 		
@@ -26,7 +26,7 @@ public class AlunoDAO extends UsuarioDAO{
 			stmt.setString(4, String.valueOf(aluno.getSexo()));
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao criar o aluno: "+e.getMessage());
 		}
 		
 		dadosCRUD.criar(conexao, aluno.getCodUsuario(), aluno.getDadosPessoais());
@@ -36,7 +36,7 @@ public class AlunoDAO extends UsuarioDAO{
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from aluno where matricAluno='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao apagar o aluno: "+e.getMessage());
 		}
 		
 		this.dadosCRUD.apagar(conexao, cod);
@@ -47,7 +47,7 @@ public class AlunoDAO extends UsuarioDAO{
 	public String procuraNomeAluno(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from aluno, usuario where aluno.matricAluno='" + cod + "' and usuario.codUsuario='" + cod + "'";
 		
-		Aluno aluno = this.selectAluno(conexao, sql);
+		AlunoVO aluno = this.selectAluno(conexao, sql);
 		
 		if (aluno != null) {
 			return aluno.getNome();
@@ -56,10 +56,10 @@ public class AlunoDAO extends UsuarioDAO{
 		return null;
 	}
 	
-	public Aluno procuraAluno(Connection conexao, int cod) throws SQLException {
+	public AlunoVO procuraAluno(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from aluno, usuario where aluno.matricAluno='" + cod + "' and usuario.codUsuario='" + cod + "'";
 		
-		Aluno aluno = this.selectAluno(conexao, sql);
+		AlunoVO aluno = this.selectAluno(conexao, sql);
 		
 		if (aluno != null) {
 			return aluno;
@@ -68,11 +68,11 @@ public class AlunoDAO extends UsuarioDAO{
 		return null;
 	}
 	
-	public Aluno selectAluno(Connection conexao, String sql) throws SQLException {
+	public AlunoVO selectAluno(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
-				Aluno aluno = new Aluno();
+				AlunoVO aluno = new AlunoVO();
 				
 				aluno.setCodUsuario(rs.getInt("codUsuario"));
 				aluno.setDadosPessoais(dadosCRUD.procuraDadosPessoais(conexao, rs.getInt("codUsuario")));
@@ -87,28 +87,28 @@ public class AlunoDAO extends UsuarioDAO{
 				return aluno;
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return null;
 	}
 	
-	public List<Aluno> listarPorTurma(Connection conexao, int codTurma) throws SQLException {
+	public List<AlunoVO> listarPorTurma(Connection conexao, int codTurma) throws SQLException {
 		String sql = "select * from aluno, usuario where aluno.matricAluno=usuario.codUsuario and aluno.codTurmaAtual='" + codTurma + "'";
 		
-		List<Aluno> alunos = this.selectListAluno(conexao, sql);
+		List<AlunoVO> alunos = this.selectListAluno(conexao, sql);
 		
 		return alunos;
 	}
 	
-	public List<Aluno> selectListAluno(Connection conexao, String sql) throws SQLException{
-		List<Aluno> alunos = new ArrayList<>();
+	public List<AlunoVO> selectListAluno(Connection conexao, String sql) throws SQLException{
+		List<AlunoVO> alunos = new ArrayList<>();
 		
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if(rs.next()) {
 				do {
-					Aluno aluno = new Aluno();
+					AlunoVO aluno = new AlunoVO();
 					
 					aluno.setCodUsuario(rs.getInt("codUsuario"));
 					aluno.setDadosPessoais(dadosCRUD.procuraDadosPessoais(conexao, rs.getInt("codUsuario")));
@@ -124,7 +124,7 @@ public class AlunoDAO extends UsuarioDAO{
 				} while (rs.next());
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return alunos;

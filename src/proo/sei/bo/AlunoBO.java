@@ -4,16 +4,19 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import proo.sei.mo.Aluno;
-import proo.sei.mo.Disciplina;
-import proo.sei.mo.Nota;
+import proo.sei.view.AlunoView;
+import proo.sei.vo.AlunoVO;
+import proo.sei.vo.DisciplinaVO;
+import proo.sei.vo.NotaVO;
 
 public class AlunoBO extends UsuarioBO {
+	AlunoView alunoView = new AlunoView();
+	
 	public AlunoBO() {
 		
 	}
 
-	public AlunoBO(Aluno usuarioAtual) {
+	public AlunoBO(AlunoVO usuarioAtual) {
 		super(usuarioAtual);
 	}
 
@@ -23,23 +26,7 @@ public class AlunoBO extends UsuarioBO {
 		int opcao;
 		
 		do {
-			System.out.println("-------------------------------------");
-			System.out.println("Olá, " + aluno.getNome() + "! O que deseja fazer?");
-			System.out.println("[1] Visualizar boletim de notas");
-			System.out.println("[2] Visualizar dados pessoais");
-			System.out.println("[3] Mudar a senha");
-			System.out.println("[4] Logout");
-
-			do {
-				System.out.print("Digite sua opção: ");
-				opcao = input.nextInt();
-
-				if (opcao <= 0 || opcao > 4) {
-					System.out.println("Opção inválida! Tente novamente!");
-				}
-			} while (opcao <= 0 || opcao > 4);
-			
-			System.out.println();
+			opcao = alunoView.interfaceMenu(aluno.getNome());
 
 			if (opcao == 1) {
 				this.visualizarBoletim();
@@ -55,18 +42,18 @@ public class AlunoBO extends UsuarioBO {
 		aluno.setCodTurmaAtual(alunoDAO.procuraAluno(conexao, aluno.getCodUsuario()).getCodTurmaAtual());
 		int serieDoAluno = turmaDAO.procuraTurma(conexao, aluno.getCodTurmaAtual()).getSerie();
 		
-		List<Disciplina> disciplinas = disciplinaDAO.listarPorSerie(conexao, serieDoAluno);
-		List<Nota> notas = notaDAO.procuraListNotasAluno(conexao, aluno.getCodUsuario());
+		List<DisciplinaVO> disciplinas = disciplinaDAO.listarPorSerie(conexao, serieDoAluno);
+		List<NotaVO> notas = notaDAO.procuraListNotasAluno(conexao, aluno.getCodUsuario());
 		
 		System.out.println("[" + aluno.getCodUsuario() + "] Aluno: " + aluno.getNome() + " | " + serieDoAluno + "º Ano");
 		
 		if(disciplinas.isEmpty()) {
 			System.out.println("Você não está matriculado em nenhuma disciplina!");
 		} else {
-			for(Disciplina disciplina:disciplinas) {
+			for(DisciplinaVO disciplina:disciplinas) {
 				double notaB1=0, notaB2=0, notaB3=0, notaB4=0;
 				
-				for(Nota nota:notas){
+				for(NotaVO nota:notas){
 					if(nota.getMatricAluno() == aluno.getCodUsuario() && nota.getCodDisciplina() == disciplina.getCodDisciplina()) {
 						if(nota.getBimestre() == 1) {
 							notaB1 = nota.getNota();

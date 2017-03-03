@@ -5,10 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import proo.sei.mo.Usuario;
+import proo.sei.vo.UsuarioVO;
 
 public class UsuarioDAO {
-	public void criarUsuario(Connection conexao, Usuario usuario) throws SQLException {
+	public void criarUsuario(Connection conexao, UsuarioVO usuario) throws SQLException {
 		String sql = "insert into usuario (login, nome, tipoUsuario) values (?, ?, ?)";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setString(1, usuario.getLogin());
@@ -16,7 +16,7 @@ public class UsuarioDAO {
 			stmt.setString(3, String.valueOf(usuario.getTipoUsuario()));
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao criar o usuário: "+e.getMessage());
 		}
 	}
 	
@@ -24,7 +24,7 @@ public class UsuarioDAO {
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from usuario where codUsuario='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao apagar o usuário: "+e.getMessage());
 		}
 	}
 	
@@ -36,7 +36,7 @@ public class UsuarioDAO {
 				return rs.getInt(1);
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return 0;
@@ -49,7 +49,7 @@ public class UsuarioDAO {
 				return false;
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: " + e.getMessage());
 		}
 		
 		return true;
@@ -60,7 +60,7 @@ public class UsuarioDAO {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao atualizar a senha: "+e.getMessage());
 		}
 	}
 }

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import proo.sei.mo.Nota;
+import proo.sei.vo.NotaVO;
 
 public class NotaDAO {
 	public void criar(Connection conexao, int matricAluno, int codDisciplina, int bimestre, double nota) throws SQLException {
@@ -20,7 +20,7 @@ public class NotaDAO {
 			stmt.setDouble(5, nota);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao inserir a nota: "+e.getMessage());
 		}
 	}
 	
@@ -28,18 +28,18 @@ public class NotaDAO {
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from nota where matricAluno='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao apagar as notas do aluno: " + e.getMessage());
 		}
 	}
 	
-	public List<Nota> selectListNota(Connection conexao, String sql) throws SQLException {
-		List<Nota> notas = new ArrayList<>();
+	public List<NotaVO> selectListNota(Connection conexao, String sql) throws SQLException {
+		List<NotaVO> notas = new ArrayList<>();
 		
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if(rs.next()) {
 				do {
-					Nota nota = new Nota();
+					NotaVO nota = new NotaVO();
 					
 					nota.setAno(rs.getInt("ano"));
 					nota.setBimestre(rs.getInt("bimestre"));
@@ -51,24 +51,24 @@ public class NotaDAO {
 				} while (rs.next());
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return notas;
 	}
 	
-	public List<Nota> procuraListNota (Connection conexao, int codDisciplina, int bimestre, int codTurma) throws SQLException {
+	public List<NotaVO> procuraListNota (Connection conexao, int codDisciplina, int bimestre, int codTurma) throws SQLException {
 		String sql = "select * from nota, aluno where codDisciplina='" + codDisciplina + "' and bimestre='" + bimestre + "' and aluno.codTurmaAtual='" + codTurma + "' and aluno.matricAluno=nota.matricAluno";
 		
-		List<Nota> notas = this.selectListNota(conexao, sql);
+		List<NotaVO> notas = this.selectListNota(conexao, sql);
 		
 		return notas;
 	}
 	
-	public List<Nota> procuraListNotasAluno (Connection conexao, int matricAluno) throws SQLException {
+	public List<NotaVO> procuraListNotasAluno (Connection conexao, int matricAluno) throws SQLException {
 		String sql = "select * from nota where matricAluno='" + matricAluno + "'";
 		
-		List<Nota> notas = this.selectListNota(conexao, sql);
+		List<NotaVO> notas = this.selectListNota(conexao, sql);
 		
 		return notas;
 	}

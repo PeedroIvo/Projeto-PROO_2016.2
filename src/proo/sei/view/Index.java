@@ -1,11 +1,11 @@
-package proo.sei.vo;
+package proo.sei.view;
 
 import java.sql.SQLException;
 
 public class Index {
 
 	public static void main(String[] args) throws SQLException { 
-		SessaoVO sessaoVO = new SessaoVO();
+		Sessao sessaoVO = new Sessao();
 		
 		boolean statusSessao;
 		

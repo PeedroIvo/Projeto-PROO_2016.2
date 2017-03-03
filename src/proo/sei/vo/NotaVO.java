@@ -1,6 +1,6 @@
-package proo.sei.mo;
+package proo.sei.vo;
 
-public class Nota {
+public class NotaVO {
 	private int matricAluno;
 	private int codDisciplina;
 	private int ano;

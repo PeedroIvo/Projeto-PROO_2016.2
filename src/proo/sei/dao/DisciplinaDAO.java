@@ -7,35 +7,35 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import proo.sei.mo.Disciplina;
+import proo.sei.vo.DisciplinaVO;
 
 public class DisciplinaDAO {
 	private ProfessorDAO professorDAO = new ProfessorDAO();
 	
-	public List<Disciplina> listarPorSerie(Connection conexao, int serie) throws SQLException {
+	public List<DisciplinaVO> listarPorSerie(Connection conexao, int serie) throws SQLException {
 		String sql = "select * from disciplina where serie='" + serie + "'";
 		
-		List<Disciplina> disciplinas = this.selectListDisciplina(conexao, sql);
+		List<DisciplinaVO> disciplinas = this.selectListDisciplina(conexao, sql);
 		
 		return disciplinas;
 	}
 	
-	public List<Disciplina> listarPorProfessor(Connection conexao, int codProfessor) throws SQLException {
+	public List<DisciplinaVO> listarPorProfessor(Connection conexao, int codProfessor) throws SQLException {
 		String sql = "select * from disciplina where codProfessor='" + codProfessor + "'";
 		
-		List<Disciplina> disciplinas = this.selectListDisciplina(conexao, sql);
+		List<DisciplinaVO> disciplinas = this.selectListDisciplina(conexao, sql);
 		
 		return disciplinas;
 	}
 	
-	public List<Disciplina> selectListDisciplina(Connection conexao, String sql) throws SQLException{
-		List<Disciplina> disciplinas = new ArrayList<>();
+	public List<DisciplinaVO> selectListDisciplina(Connection conexao, String sql) throws SQLException{
+		List<DisciplinaVO> disciplinas = new ArrayList<>();
 		
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if(rs.next()) {
 				do {
-					Disciplina disciplina = new Disciplina();
+					DisciplinaVO disciplina = new DisciplinaVO();
 					
 					disciplina.setCodDisciplina(rs.getInt("codDisciplina"));
 					disciplina.setNome(rs.getString("nome"));
@@ -47,7 +47,7 @@ public class DisciplinaDAO {
 				} while (rs.next());
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return disciplinas;
@@ -59,14 +59,14 @@ public class DisciplinaDAO {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro atualizar a disciplina: "+e.getMessage());
 		}
 	}
 	
 	public String procuraNomeDisciplina(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from disciplina where codDisciplina='" + cod + "'";
 		
-		Disciplina disciplina = this.selectDisciplina(conexao, sql);
+		DisciplinaVO disciplina = this.selectDisciplina(conexao, sql);
 		
 		if (disciplina != null) {
 			return disciplina.getSigla() + " (" + disciplina.getNome() + ")";
@@ -75,10 +75,10 @@ public class DisciplinaDAO {
 		return null;
 	}
 	
-	public Disciplina procuraDisciplina(Connection conexao, int cod) throws SQLException {
+	public DisciplinaVO procuraDisciplina(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from disciplina where codDisciplina='" + cod + "'";
 		
-		Disciplina disciplina = this.selectDisciplina(conexao, sql);
+		DisciplinaVO disciplina = this.selectDisciplina(conexao, sql);
 		
 		if (disciplina != null) {
 			return disciplina;
@@ -87,11 +87,11 @@ public class DisciplinaDAO {
 		return null;
 	}
 	
-	public Disciplina selectDisciplina(Connection conexao, String sql) throws SQLException {
+	public DisciplinaVO selectDisciplina(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
-				Disciplina disciplina = new Disciplina();
+				DisciplinaVO disciplina = new DisciplinaVO();
 				
 				disciplina.setCodDisciplina(rs.getInt("codDisciplina"));
 				disciplina.setNome(rs.getString("nome"));
@@ -102,7 +102,7 @@ public class DisciplinaDAO {
 				return disciplina;
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return null;

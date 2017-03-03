@@ -1,11 +1,11 @@
-package proo.sei.mo;
+package proo.sei.vo;
 
-public class Disciplina {
+public class DisciplinaVO {
 	private int codDisciplina;
 	private String nome;
 	private String sigla;
 	private int serie;
-	private Professor profResponsavel;
+	private ProfessorVO profResponsavel;
 
 	public int getCodDisciplina() {
 		return codDisciplina;
@@ -31,11 +31,11 @@ public class Disciplina {
 		this.sigla = sigla;
 	}
 
-	public Professor getProfResponsavel() {
+	public ProfessorVO getProfResponsavel() {
 		return profResponsavel;
 	}
 
-	public void setProfResponsavel(Professor profResponsavel) {
+	public void setProfResponsavel(ProfessorVO profResponsavel) {
 		this.profResponsavel = profResponsavel;
 	}
 

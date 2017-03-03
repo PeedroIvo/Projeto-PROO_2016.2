@@ -5,10 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import proo.sei.mo.Endereco;
+import proo.sei.vo.EnderecoVO;
 
 public class EnderecoDAO {
-	public void criar(Connection conexao, int cod, Endereco endereco) throws SQLException {
+	public void criar(Connection conexao, int cod, EnderecoVO endereco) throws SQLException {
 		String sql = "insert into endereco values (?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setInt(1, cod);
@@ -21,7 +21,7 @@ public class EnderecoDAO {
 			stmt.setString(8, endereco.getEstado());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao criar o endereço: "+e.getMessage());
 		}
 	}
 	
@@ -29,14 +29,14 @@ public class EnderecoDAO {
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from endereco where codUsuario='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao apagar o endereço: "+e.getMessage());
 		}
 	}
 	
-	public Endereco procuraEndereco(Connection conexao, int cod) throws SQLException {
+	public EnderecoVO procuraEndereco(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from endereco where codUsuario='" + cod + "'";
 		
-		Endereco endereco = this.selectEndereco(conexao, sql);
+		EnderecoVO endereco = this.selectEndereco(conexao, sql);
 		
 		if (endereco != null) {
 			return endereco;
@@ -45,11 +45,11 @@ public class EnderecoDAO {
 		return null;
 	}
 	
-	public Endereco selectEndereco(Connection conexao, String sql) throws SQLException {
+	public EnderecoVO selectEndereco(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
-				Endereco endereco = new Endereco();
+				EnderecoVO endereco = new EnderecoVO();
 				
 				endereco.setBairro(rs.getString("bairro"));
 				endereco.setCep(rs.getString("cep"));
@@ -62,7 +62,7 @@ public class EnderecoDAO {
 				return endereco;
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return null;

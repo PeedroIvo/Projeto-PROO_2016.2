@@ -5,12 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import proo.sei.mo.DadosPessoais;
+import proo.sei.vo.DadosPessoaisVO;
 
 public class DadosPessoaisDAO {
 	private EnderecoDAO enderecoCRUD = new EnderecoDAO();
 	
-	public void criar (Connection conexao, int cod, DadosPessoais dados) throws SQLException {
+	public void criar (Connection conexao, int cod, DadosPessoaisVO dados) throws SQLException {
 		String sql = "insert into dadosPessoais values (?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setInt(1, cod);
@@ -21,7 +21,7 @@ public class DadosPessoaisDAO {
 			stmt.setString(6, dados.getCelular());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao criar os dados pessoais: "+e.getMessage());
 		}
 		
 		this.enderecoCRUD.criar(conexao, cod, dados.getEndereco());
@@ -33,14 +33,14 @@ public class DadosPessoaisDAO {
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from dadosPessoais where codUsuario='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao apagar os dados pessoais: "+e.getMessage());
 		}
 	}
 	
-	public DadosPessoais procuraDadosPessoais(Connection conexao, int cod) throws SQLException {
+	public DadosPessoaisVO procuraDadosPessoais(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from dadospessoais where codUsuario='" + cod + "'";
 		
-		DadosPessoais dados = this.selectDadosPessoais(conexao, sql);
+		DadosPessoaisVO dados = this.selectDadosPessoais(conexao, sql);
 		
 		if (dados != null) {
 			return dados;
@@ -49,11 +49,11 @@ public class DadosPessoaisDAO {
 		return null;
 	}
 	
-	public DadosPessoais selectDadosPessoais(Connection conexao, String sql) throws SQLException {
+	public DadosPessoaisVO selectDadosPessoais(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
-				DadosPessoais dados = new DadosPessoais();
+				DadosPessoaisVO dados = new DadosPessoaisVO();
 				
 				dados.setCelular(rs.getString("celular"));
 				dados.setCpf(rs.getString("cpf"));
@@ -65,7 +65,7 @@ public class DadosPessoaisDAO {
 				return dados;
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Erro: "+e.getMessage());
+			throw new SQLException("Erro ao consultar: "+e.getMessage());
 		}
 		
 		return null;

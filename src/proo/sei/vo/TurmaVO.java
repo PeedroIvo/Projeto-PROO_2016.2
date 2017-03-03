@@ -1,18 +1,18 @@
-package proo.sei.mo;
+package proo.sei.vo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import proo.sei.mo.Aluno;
+import proo.sei.vo.AlunoVO;
 
-public class Turma {
+public class TurmaVO {
 	private int codTurma;
 	private int serie;
 	private char turno;
 	private int ano;
 	private String sala;
-	private List<Disciplina> disciplinas = new ArrayList<>();
-	private List<Aluno> alunos = new ArrayList<>();
+	private List<DisciplinaVO> disciplinas = new ArrayList<>();
+	private List<AlunoVO> alunos = new ArrayList<>();
 
 	public int getCodTurma() {
 		return codTurma;
@@ -54,27 +54,27 @@ public class Turma {
 		this.sala = sala;
 	}
 	
-	public void addAluno(Aluno aluno) {
+	public void addAluno(AlunoVO aluno) {
 		alunos.add(aluno);
 	}
 
-	public List<Aluno> getAlunos() {
+	public List<AlunoVO> getAlunos() {
 		return alunos;
 	}
 
-	public void setAlunos(List<Aluno> alunos) {
+	public void setAlunos(List<AlunoVO> alunos) {
 		this.alunos = alunos;
 	}
 
-	public void addDisciplina(Disciplina disciplina) {
+	public void addDisciplina(DisciplinaVO disciplina) {
 		disciplinas.add(disciplina);
 	}
 
-	public List<Disciplina> getDisciplinas() {
+	public List<DisciplinaVO> getDisciplinas() {
 		return disciplinas;
 	}
 	
-	public void setDisciplinas(List<Disciplina> disciplinas) {
+	public void setDisciplinas(List<DisciplinaVO> disciplinas) {
 		this.disciplinas = disciplinas;
 	}
 }

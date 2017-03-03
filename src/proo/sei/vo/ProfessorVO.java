@@ -1,8 +1,8 @@
-package proo.sei.mo;
+package proo.sei.vo;
 
-public class Professor extends Usuario {
+public class ProfessorVO extends UsuarioVO {
 	private String dataAdmissao;
-	private DadosPessoais dadosPessoais = new DadosPessoais();
+	private DadosPessoaisVO dadosPessoais = new DadosPessoaisVO();
 	
 	public String getDataAdmissao() {
 		return dataAdmissao;
@@ -12,11 +12,11 @@ public class Professor extends Usuario {
 		this.dataAdmissao = dataAdmissao;
 	}
 
-	public DadosPessoais getDadosPessoais() {
+	public DadosPessoaisVO getDadosPessoais() {
 		return dadosPessoais;
 	}
 
-	public void setDadosPessoais(DadosPessoais dadosPessoais) {
+	public void setDadosPessoais(DadosPessoaisVO dadosPessoais) {
 		this.dadosPessoais = dadosPessoais;
 	}
 }
