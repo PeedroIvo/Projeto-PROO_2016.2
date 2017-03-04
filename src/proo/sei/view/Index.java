@@ -5,7 +5,7 @@ import java.sql.SQLException;
 public class Index {
 
 	public static void main(String[] args) throws SQLException { 
-		Sessao sessaoVO = new Sessao();
+		SessaoView sessaoVO = new SessaoView();
 		
 		boolean statusSessao;
 		

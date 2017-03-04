@@ -1,14 +1,15 @@
 package proo.sei.view;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import proo.sei.exceptions.ViewException;
 
 public class ProfessorView {
 	
 	private Scanner input = new Scanner(System.in);
 	
 	public int interfaceMenu (String nome) {
-		int opcao;
-		
 		System.out.println("-------------------------------------");
 		System.out.println("Olá, " + nome + "! O que deseja fazer?");
 		System.out.println("[1] Visualizar suas disciplinas");
@@ -17,14 +18,28 @@ public class ProfessorView {
 		System.out.println("[4] Mudar a senha");
 		System.out.println("[5] Logout");
 
+		Boolean erro;
+		int opcao = 0;
+		
 		do {
-			System.out.print("Digite sua opção: ");
-			opcao = input.nextInt();
-
-			if (opcao <= 0 || opcao > 5) {
+			erro = false;
+			System.out.print("Digite sua opção: ");			
+			
+			try {
+				opcao = this.input.nextInt();
+				
+				if (opcao <= 0 || opcao > 5) {
+					throw new ViewException("Opção inválida! Tente novamente!");
+				}
+			} catch (InputMismatchException e) {
 				System.out.println("Opção inválida! Tente novamente!");
+				input.next();
+				erro = true;
+			} catch (ViewException e) {
+				System.out.println(e.getMessage());
+				erro = true;
 			}
-		} while (opcao <= 0 || opcao > 5);
+		} while (erro);
 		
 		System.out.println();
 		

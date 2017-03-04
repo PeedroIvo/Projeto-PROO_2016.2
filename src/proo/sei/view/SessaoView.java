@@ -1,10 +1,12 @@
 package proo.sei.view;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import proo.sei.bo.SessaoBO;
+import proo.sei.exceptions.ViewException;
 
-public class Sessao {
+public class SessaoView {
 	private Scanner input = new Scanner(System.in);
 	
 	private SessaoBO sessaoBO = new SessaoBO();
@@ -21,16 +23,28 @@ public class Sessao {
 		System.out.println("[1] Login");
 		System.out.println("[2] Sair");
 		
-		int opcao;
+		Boolean erro;
+		int opcao = 0;
 		
 		do {
-			System.out.print("Digite sua opção: ");
-			opcao = input.nextInt();
-
-			if (opcao <= 0 || opcao > 2) {
+			erro = false;
+			System.out.print("Digite sua opção: ");			
+			
+			try {
+				opcao = this.input.nextInt();
+				
+				if (opcao <= 0 || opcao > 2) {
+					throw new ViewException("Opção inválida! Tente novamente!");
+				}
+			} catch (InputMismatchException e) {
 				System.out.println("Opção inválida! Tente novamente!");
+				input.next();
+				erro = true;
+			} catch (ViewException e) {
+				System.out.println(e.getMessage());
+				erro = true;
 			}
-		} while (opcao <= 0 || opcao > 2);
+		} while (erro);
 		
 		System.out.println();
 		

@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.InputMismatchException;
 import java.util.List;
 
-import proo.sei.exceptions.AdminBOException;
 import proo.sei.view.AdministradorView;
 import proo.sei.vo.AdministradorVO;
 import proo.sei.vo.AlunoVO;
@@ -52,146 +51,6 @@ public class AdministradorBO extends UsuarioBO {
 				this.mudarSenha(admin.getLogin());
 			}
 		} while (opcao != 9);
-	}
-	
-	private Boolean validaSexo (char sexo) {
-		try {				
-			if (sexo != 'M' && sexo != 'F')
-				throw new AdminBOException ("Sexo Inválido! Selecione Feminino ou Masculino");				
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private Boolean validaCPF (String CPF) {
-		try {
-			Long.parseLong(CPF);
-			
-			if (CPF.length() != 11)
-				throw new AdminBOException ("O CPF deve conter 11 números!");
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		} catch (NumberFormatException e) {
-			System.out.println("O CPF deve conter apenas números!");
-			return false;
-		}
-				
-		return true;
-	}
-	
-	private boolean validaRG(String RG) {
-		try {
-			Long.parseLong(RG);
-			
-			if (RG.length() != 8)
-				throw new AdminBOException ("O RG deve conter 8 números!");
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		} catch (NumberFormatException e) {
-			System.out.println("O RG deve conter apenas números!");
-			return false;
-		}
-				
-		return true;
-	}
-	
-	private boolean validaTelefone(String Telefone) {
-		try {
-			Long.parseLong(Telefone);
-			
-			if (Telefone.length() > 11)
-				throw new AdminBOException ("O telefone deve conter no máximo 11 números com o DDD!");
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		} catch (NumberFormatException e) {
-			System.out.println("O telefone deve conter apenas números!");
-			return false;
-		}
-				
-		return true;
-	}
-	
-	private boolean validaCEP(String CEP) {
-		try {
-			Long.parseLong(CEP);
-			
-			if (CEP.length() != 8)
-				throw new AdminBOException ("O CEP deve conter 8 números!");
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		} catch (NumberFormatException e) {
-			System.out.println("O CEP deve conter apenas números!");
-			return false;
-		}
-				
-		return true;
-	}
-	
-	private Boolean validaSerie (int serie) {
-		try {				
-			if (serie != 1 && serie != 2 && serie != 3)
-				throw new AdminBOException ("Série inválida! Selecione 1º Ano, 2º Ano ou 3º Ano");				
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private Boolean validaTurno (char turno) {
-		try {				
-			if (turno != 'M' && turno != 'V')
-				throw new AdminBOException ("Turno inválido! Selecione Matutino ou Vespertino");				
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private Boolean validaLogin (Connection conexao, String login) {
-		try {				
-			if (!usuarioDAO.usuarioExiste(conexao, login))
-				throw new AdminBOException ("Este login já está sendo usado, tente novamente!");				
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
-		
-		return true;
-	}
-	
-	private boolean validaTamanhoCampo(String conteudo, int tamanhoMaximo) {
-		try {			
-			if (conteudo.length() > tamanhoMaximo)
-				throw new AdminBOException ("Informação muito longa! Use no máximo " + tamanhoMaximo + " caracteres");
-			
-		} catch (AdminBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
-				
-		return true;
 	}
 	
 	public void matricularAluno() {
@@ -263,8 +122,8 @@ public class AdministradorBO extends UsuarioBO {
 		novoAluno.getDadosPessoais().getEndereco().setRua(input.nextLine());
 		
 		do {
-		System.out.print("Número: ");
-		novoAluno.getDadosPessoais().getEndereco().setnCasa(input.nextLine());
+			System.out.print("Número: ");
+			novoAluno.getDadosPessoais().getEndereco().setnCasa(input.nextLine());
 		} while (!validaTamanhoCampo(novoAluno.getDadosPessoais().getEndereco().getnCasa(), 10));
 		
 		System.out.print("Bairro: ");
@@ -419,8 +278,8 @@ public class AdministradorBO extends UsuarioBO {
 		novoProfessor.getDadosPessoais().getEndereco().setRua(input.nextLine());
 		
 		do {
-		System.out.print("Número: ");
-		novoProfessor.getDadosPessoais().getEndereco().setnCasa(input.nextLine());
+			System.out.print("Número: ");
+			novoProfessor.getDadosPessoais().getEndereco().setnCasa(input.nextLine());
 		} while (!validaTamanhoCampo(novoProfessor.getDadosPessoais().getEndereco().getnCasa(), 10));
 		
 		System.out.print("Bairro: ");
@@ -470,27 +329,27 @@ public class AdministradorBO extends UsuarioBO {
 		
 		System.out.println();
 		
-		List<DisciplinaVO> disciplinas = null;
 		try {
-			disciplinas = disciplinaDAO.listarPorSerie(conexao, serie);
+			List<DisciplinaVO> disciplinas = disciplinaDAO.listarPorSerie(conexao, serie);
+			
+			
+			if(disciplinas.isEmpty()){
+				System.out.println("Esta série está sem disciplinas cadastradas!");
+			} else {
+				for (DisciplinaVO disciplina:disciplinas) {
+					System.out.println("[" + disciplina.getCodDisciplina() + "] " + disciplina.getSigla() + " | Professor: " + disciplina.getProfResponsavel().getNome() + " [" + disciplina.getProfResponsavel().getCodUsuario() + "] ");
+				}
+			}
+			
+			System.out.println();
+			
+			char resposta = this.confirmar("Deseja mudar o professor de alguma disciplina (S ou N)? ");
+			
+			if (resposta == 'S') {
+				this.editaProfDisciplina();
+			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-		}
-		
-		if(disciplinas.isEmpty()){
-			System.out.println("Esta série está sem disciplinas cadastradas!");
-		} else {
-			for (DisciplinaVO disciplina:disciplinas) {
-				System.out.println("[" + disciplina.getCodDisciplina() + "] " + disciplina.getSigla() + " | Professor: " + disciplina.getProfResponsavel().getNome() + " [" + disciplina.getProfResponsavel().getCodUsuario() + "] ");
-			}
-		}
-		
-		System.out.println();
-		
-		char resposta = this.confirmar("Deseja mudar o professor de alguma disciplina (S ou N)? ");
-		
-		if (resposta == 'S') {
-			this.editaProfDisciplina();
 		}
 		
 		System.out.println();
@@ -620,24 +479,23 @@ public class AdministradorBO extends UsuarioBO {
 			turno = input.next().charAt(0);
 		} while (!validaTurno(turno));
 		
-		TurmaVO turma = null;
-		try {
+		try {		
 			int codTurma = turmaDAO.procuraCodTurma(conexao, serie, turno);
-			turma = turmaDAO.procuraTurma(conexao, codTurma);
+			TurmaVO turma = turmaDAO.procuraTurma(conexao, codTurma);
+		
+			System.out.println("\nCódigo: " + turma.getCodTurma() + " | Série: " + turma.getSerie() + "º Ano | Turno: " + turma.getTurno() + " | Ano: " + turma.getAno());
+			
+			List<AlunoVO> alunos =  turma.getAlunos();
+			
+			if(alunos.isEmpty()){
+				System.out.println("No momento, esta turma não tem nenhum aluno matriculado!");
+			} else {
+				for (AlunoVO aluno:alunos) {
+					System.out.println("[" + aluno.getCodUsuario() + "] Nome: " + aluno.getNome());
+				}
+			}
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-		}
-		
-		System.out.println("\nCódigo: " + turma.getCodTurma() + " | Série: " + turma.getSerie() + "º Ano | Turno: " + turma.getTurno() + " | Ano: " + turma.getAno());
-		
-		List<AlunoVO> alunos =  turma.getAlunos();
-		
-		if(alunos.isEmpty()){
-			System.out.println("No momento, esta turma não tem nenhum aluno matriculado!");
-		} else {
-			for (AlunoVO aluno:alunos) {
-				System.out.println("[" + aluno.getCodUsuario() + "] Nome: " + aluno.getNome());
-			}
 		}
 		
 		System.out.println();

@@ -84,7 +84,7 @@ public class SessaoBO {
 			}
 		
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out.println("Erro ao validar o login: " + e.getMessage());
 		}
 		
 		return false;
