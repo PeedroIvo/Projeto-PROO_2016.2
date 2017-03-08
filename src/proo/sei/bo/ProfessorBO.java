@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.List;
 
+import proo.sei.exceptions.UsuarioBOException;
 import proo.sei.view.ProfessorView;
 import proo.sei.vo.AlunoVO;
 import proo.sei.vo.DisciplinaVO;
@@ -259,5 +260,18 @@ public class ProfessorBO extends UsuarioBO {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());			
 		}
+	}
+	
+	public Boolean validaBimestre (int bimestre) {
+		try {				
+			if (bimestre != 1 && bimestre != 2 && bimestre != 3 && bimestre != 4)
+				throw new UsuarioBOException ("Bimestre inválido! Selecione 1, 2, 3 ou 4");				
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
 	}
 }

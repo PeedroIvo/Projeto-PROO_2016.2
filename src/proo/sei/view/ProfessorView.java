@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import proo.sei.exceptions.ViewException;
 
-public class ProfessorView {
+public class ProfessorView extends UsuarioView {
 	
 	private Scanner input = new Scanner(System.in);
 	

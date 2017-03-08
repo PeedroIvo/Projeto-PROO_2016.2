@@ -3,9 +3,9 @@ package proo.sei.bo;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.InputMismatchException;
 import java.util.List;
 
+import proo.sei.exceptions.UsuarioBOException;
 import proo.sei.view.AdministradorView;
 import proo.sei.vo.AdministradorVO;
 import proo.sei.vo.AlunoVO;
@@ -14,9 +14,7 @@ import proo.sei.vo.NotaVO;
 import proo.sei.vo.ProfessorVO;
 import proo.sei.vo.TurmaVO;
 
-public class AdministradorBO extends UsuarioBO {
-	AdministradorView adminView = new AdministradorView();
-	
+public class AdministradorBO extends UsuarioBO {	
 	public AdministradorBO() {
 	
 	}
@@ -27,6 +25,7 @@ public class AdministradorBO extends UsuarioBO {
 
 	@Override
 	public void menu(Connection conexao) {
+		AdministradorView adminView = new AdministradorView();
 		this.setConexao(conexao);
 		int opcao;
 		
@@ -54,114 +53,15 @@ public class AdministradorBO extends UsuarioBO {
 	}
 	
 	public void matricularAluno() {
-		Boolean erro;
+		AdministradorView adminView = new AdministradorView();
 		
-		AlunoVO novoAluno = new AlunoVO();	
+		AlunoVO novoAluno = new AlunoVO();
 		
 		novoAluno.setTipoUsuario('a');
+		novoAluno = adminView.interfaceMatricularAluno(novoAluno);
 		
-		System.out.println("Digite os dados do novo aluno abaixo:");
-		
-		input.nextLine();
-		
-		System.out.print("Nome: ");
-		novoAluno.setNome(input.nextLine());
-		
-		do {
-			erro = false;
-			System.out.print("Idade: ");			
-			
-			try {
-				novoAluno.setIdade(input.nextInt());
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
-
-		do {
-			System.out.print("Sexo (F ou M): ");
-			novoAluno.setSexo(input.next().charAt(0));
-		} while (!validaSexo(novoAluno.getSexo()));
-		
-		do {
-			System.out.print("CPF: ");
-			novoAluno.getDadosPessoais().setCpf(input.next());	
-		} while (!validaCPF(novoAluno.getDadosPessoais().getCpf()));
-		
-		do {
-			System.out.print("RG: ");
-			novoAluno.getDadosPessoais().setRg(input.next());
-		} while (!validaRG(novoAluno.getDadosPessoais().getRg()));
-		
-		System.out.print("Email: ");
-		novoAluno.getDadosPessoais().setEmail(input.next().toLowerCase());
-	
-		input.nextLine();
-		
-		do {
-			System.out.print("Celular: ");
-			novoAluno.getDadosPessoais().setCelular(input.nextLine());
-		} while (!validaTelefone(novoAluno.getDadosPessoais().getCelular()));
-		
-		do {
-			System.out.print("Telefone: ");
-			novoAluno.getDadosPessoais().setTelefone(input.nextLine());
-		} while (!validaTelefone(novoAluno.getDadosPessoais().getTelefone()));
-		
-		System.out.println("\nAgora digite os dados do endereço do novo aluno:" );
-		
-		do {
-			System.out.print("CEP: ");
-			novoAluno.getDadosPessoais().getEndereco().setCep(input.next());
-		} while (!validaCEP(novoAluno.getDadosPessoais().getEndereco().getCep()));
-		
-		input.nextLine();
-		System.out.print("Rua: ");
-		novoAluno.getDadosPessoais().getEndereco().setRua(input.nextLine());
-		
-		do {
-			System.out.print("Número: ");
-			novoAluno.getDadosPessoais().getEndereco().setnCasa(input.nextLine());
-		} while (!validaTamanhoCampo(novoAluno.getDadosPessoais().getEndereco().getnCasa(), 10));
-		
-		System.out.print("Bairro: ");
-		novoAluno.getDadosPessoais().getEndereco().setBairro(input.nextLine());
-		
-		System.out.print("Complemento: ");
-		novoAluno.getDadosPessoais().getEndereco().setComplemento(input.nextLine());
-		
-		System.out.print("Cidade: ");
-		novoAluno.getDadosPessoais().getEndereco().setCidade(input.nextLine());
-		
-		System.out.print("Estado: ");
-		novoAluno.getDadosPessoais().getEndereco().setEstado(input.nextLine());
-		
-		System.out.println();
-		
-		int serie = 0;
-		
-		do {
-			erro = false;
-			System.out.print("Série (1, 2 ou 3): ");			
-			
-			try {
-				serie = input.nextInt();
-				erro = !validaSerie(serie);
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
-		
-		char turno;
-		
-		do {
-			System.out.print("Turno (M ou V): ");
-			turno = input.next().charAt(0);
-		} while (!validaTurno(turno));
+		int serie = adminView.interfaceSerie();
+		char turno = adminView.interfaceTurno();
 		
 		try {
 			novoAluno.setCodTurmaAtual(turmaDAO.procuraCodTurma(conexao, serie, turno));
@@ -171,10 +71,7 @@ public class AdministradorBO extends UsuarioBO {
 		
 		System.out.println();
 		
-		do {
-			System.out.print("Novo login do aluno no sistema: ");
-			novoAluno.setLogin(input.next().toLowerCase());			
-		} while (!validaLogin(conexao, novoAluno.getLogin()));
+		novoAluno.setLogin(adminView.interfaceLogin(conexao));
 		
 		try {
 			alunoDAO.criar(conexao, novoAluno);
@@ -184,24 +81,12 @@ public class AdministradorBO extends UsuarioBO {
 		}
 	}
 
-	public void desmatricularAluno() {		
+	public void desmatricularAluno() {
+		AdministradorView adminView = new AdministradorView();
+		
 		System.out.println("Atenção! O cancelamento de matrícula não poderá ser desfeito!");
 		
-		Boolean erro;
-		int cod = 0;
-		
-		do {
-			erro = false;
-			System.out.print("Digite o código de matrícula do Aluno: ");			
-			
-			try {
-				cod = input.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
+		int cod = adminView.interfaceCod("Digite o código de matrícula do Aluno");
 		
 		try {
 			String nomeAluno = alunoDAO.procuraNomeAluno(conexao, cod);
@@ -228,78 +113,16 @@ public class AdministradorBO extends UsuarioBO {
 	}
 	
 	public void cadastrarProfessor() {
+		AdministradorView adminView = new AdministradorView();
 		ProfessorVO novoProfessor = new ProfessorVO();
 		
 		Calendar cal = Calendar.getInstance(); 
 		novoProfessor.setDataAdmissao(cal.get(Calendar.YEAR) + "/" + (cal.get(Calendar.MONTH)+1) + "/" + cal.get(Calendar.DAY_OF_MONTH));
 		
 		novoProfessor.setTipoUsuario('p');
+		novoProfessor = adminView.interfaceMatricularProfessor(novoProfessor);
 		
-		System.out.println("Digite os dados do novo professor abaixo:");
-		
-		input.nextLine();
-		System.out.print("Nome: ");
-		novoProfessor.setNome(input.nextLine());
-		
-		do {
-			System.out.print("CPF: ");
-			novoProfessor.getDadosPessoais().setCpf(input.next());	
-		} while (!validaCPF(novoProfessor.getDadosPessoais().getCpf()));
-		
-		do {
-			System.out.print("RG: ");
-			novoProfessor.getDadosPessoais().setRg(input.next());
-		} while (!validaRG(novoProfessor.getDadosPessoais().getRg()));
-		
-		System.out.print("Email: ");
-		novoProfessor.getDadosPessoais().setEmail(input.next().toLowerCase());
-	
-		input.nextLine();
-		
-		do {
-			System.out.print("Celular: ");
-			novoProfessor.getDadosPessoais().setCelular(input.nextLine());
-		} while (!validaTelefone(novoProfessor.getDadosPessoais().getCelular()));
-		
-		do {
-			System.out.print("Telefone: ");
-			novoProfessor.getDadosPessoais().setTelefone(input.nextLine());
-		} while (!validaTelefone(novoProfessor.getDadosPessoais().getTelefone()));
-		
-		System.out.println("\nAgora digite os dados do endereço do novo professor:" );
-		
-		do {
-			System.out.print("CEP: ");
-			novoProfessor.getDadosPessoais().getEndereco().setCep(input.next());
-		} while (!validaCEP(novoProfessor.getDadosPessoais().getEndereco().getCep()));
-		
-		input.nextLine();
-		System.out.print("Rua: ");
-		novoProfessor.getDadosPessoais().getEndereco().setRua(input.nextLine());
-		
-		do {
-			System.out.print("Número: ");
-			novoProfessor.getDadosPessoais().getEndereco().setnCasa(input.nextLine());
-		} while (!validaTamanhoCampo(novoProfessor.getDadosPessoais().getEndereco().getnCasa(), 10));
-		
-		System.out.print("Bairro: ");
-		novoProfessor.getDadosPessoais().getEndereco().setBairro(input.nextLine());
-		
-		System.out.print("Complemento: ");
-		novoProfessor.getDadosPessoais().getEndereco().setComplemento(input.nextLine());
-		
-		System.out.print("Cidade: ");
-		novoProfessor.getDadosPessoais().getEndereco().setCidade(input.nextLine());
-		
-		System.out.print("Estado: ");
-		novoProfessor.getDadosPessoais().getEndereco().setEstado(input.nextLine());
-		
-		System.out.println();
-		
-		do {
-			System.out.print("Novo login do professor no sistema: ");
-			novoProfessor.setLogin(input.next().toLowerCase());		
-		} while (!validaLogin(conexao, novoProfessor.getLogin()));
+		novoProfessor.setLogin(adminView.interfaceLogin(conexao));
 		
 		try {
 			professorDAO.criar(conexao, novoProfessor);
@@ -310,22 +133,9 @@ public class AdministradorBO extends UsuarioBO {
 	}
 	
 	public void quadroProfessores() {
-		Boolean erro;
-		int serie = 0;
+		AdministradorView adminView = new AdministradorView();
 		
-		do {
-			erro = false;
-			System.out.print("Deseja consultar as disciplinas de qual série (1, 2 ou 3)? ");		
-			
-			try {
-				serie = input.nextInt();
-				erro = !validaSerie(serie);
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
+		int serie = adminView.interfaceSerie();
 		
 		System.out.println();
 		
@@ -356,36 +166,10 @@ public class AdministradorBO extends UsuarioBO {
 	}
 	
 	public void editaProfDisciplina() {
-		Boolean erro;
+		AdministradorView adminView = new AdministradorView();
 		
-		int codDisciplina = 0;
-		do {
-			erro = false;
-			System.out.print("Digite o código da disciplina: ");			
-			
-			try {
-				codDisciplina = input.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
-		
-		
-		int codProfessor = 0;
-		do {
-			erro = false;
-			System.out.print("Digite o código do novo professor dessa disciplina: ");			
-			
-			try {
-				codProfessor = input.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
+		int codDisciplina = adminView.interfaceCod("Digite o código da disciplina");
+		int codProfessor = adminView.interfaceCod("Digite o código do novo professor dessa disciplina");
 		
 		try {
 			String nomeDisciplina = disciplinaDAO.procuraNomeDisciplina(conexao, codDisciplina);
@@ -412,23 +196,11 @@ public class AdministradorBO extends UsuarioBO {
 	}
 	
 	public void descadastrarProfessor() {
+		AdministradorView adminView = new AdministradorView();
+		
 		System.out.println("Atenção! O cancelamento de cadastro não poderá ser desfeito!");
 		
-		Boolean erro;
-		
-		int cod = 0;
-		do {
-			erro = false;
-			System.out.print("Digite o código de cadastro do Professor: ");			
-			
-			try {
-				cod = input.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
+		int cod = adminView.interfaceCod("Digite o código de cadastro do Professor: ");
 		
 		try {
 			String nomeProfessor = professorDAO.procuraNomeProfessor(conexao, cod);
@@ -454,30 +226,12 @@ public class AdministradorBO extends UsuarioBO {
 	}
 	
 	public void visualizarTurma() {
+		AdministradorView adminView = new AdministradorView();
+		
 		System.out.println("Digite as informações da turma que deseja consultar abaixo");
 		
-		Boolean erro;
-		
-		int serie = 0;
-		do {
-			erro = false;
-			System.out.print("Série (1, 2 ou 3): ");			
-			
-			try {
-				serie = input.nextInt();
-				erro = !validaSerie(serie);
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
-		
-		char turno;
-		do {
-			System.out.print("Turno (M ou V): ");
-			turno = input.next().charAt(0);
-		} while (!validaTurno(turno));
+		int serie = adminView.interfaceSerie();
+		char turno = adminView.interfaceTurno();
 		
 		try {		
 			int codTurma = turmaDAO.procuraCodTurma(conexao, serie, turno);
@@ -502,21 +256,9 @@ public class AdministradorBO extends UsuarioBO {
 	}
 	
 	public void visualizarBoletim() {
-		Boolean erro;
+		AdministradorView adminView = new AdministradorView();
 		
-		int cod = 0;
-		do {
-			erro = false;
-			System.out.print("Digite o código de matrícula do Aluno: ");			
-			
-			try {
-				cod = input.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
+		int cod = adminView.interfaceCod("Digite o código de matrícula do Aluno");
 		
 		try {		
 			AlunoVO aluno = alunoDAO.procuraAluno(conexao, cod);
@@ -570,5 +312,132 @@ public class AdministradorBO extends UsuarioBO {
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+	
+	public Boolean validaSexo (char sexo) {
+		try {				
+			if (sexo != 'M' && sexo != 'F')
+				throw new UsuarioBOException ("Sexo Inválido! Selecione Feminino ou Masculino");				
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public Boolean validaCPF (String CPF) {
+		try {
+			Long.parseLong(CPF);
+			
+			if (CPF.length() != 11)
+				throw new UsuarioBOException ("O CPF deve conter 11 números!");
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		} catch (NumberFormatException e) {
+			System.out.println("O CPF deve conter apenas números!");
+			return false;
+		}
+				
+		return true;
+	}
+	
+	public boolean validaRG(String RG) {
+		try {
+			Long.parseLong(RG);
+			
+			if (RG.length() != 8)
+				throw new UsuarioBOException ("O RG deve conter 8 números!");
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		} catch (NumberFormatException e) {
+			System.out.println("O RG deve conter apenas números!");
+			return false;
+		}
+				
+		return true;
+	}
+	
+	public boolean validaTelefone(String Telefone) {
+		try {
+			Long.parseLong(Telefone);
+			
+			if (Telefone.length() > 11)
+				throw new UsuarioBOException ("O telefone deve conter no máximo 11 números com o DDD!");
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		} catch (NumberFormatException e) {
+			System.out.println("O telefone deve conter apenas números!");
+			return false;
+		}
+				
+		return true;
+	}
+	
+	public boolean validaCEP(String CEP) {
+		try {
+			Long.parseLong(CEP);
+			
+			if (CEP.length() != 8)
+				throw new UsuarioBOException ("O CEP deve conter 8 números!");
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		} catch (NumberFormatException e) {
+			System.out.println("O CEP deve conter apenas números!");
+			return false;
+		}
+				
+		return true;
+	}
+	
+	public Boolean validaSerie (int serie) {
+		try {				
+			if (serie != 1 && serie != 2 && serie != 3)
+				throw new UsuarioBOException ("Série inválida! Selecione 1º Ano, 2º Ano ou 3º Ano");				
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public Boolean validaLogin (Connection conexao, String login) {
+		try {				
+			if (!usuarioDAO.usuarioExiste(conexao, login))
+				throw new UsuarioBOException ("Este login já está sendo usado, tente novamente!");				
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean validaTamanhoCampo(String conteudo, int tamanhoMaximo) {
+		try {			
+			if (conteudo.length() > tamanhoMaximo)
+				throw new UsuarioBOException ("Informação muito longa! Use no máximo " + tamanhoMaximo + " caracteres");
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+				
+		return true;
 	}
 }

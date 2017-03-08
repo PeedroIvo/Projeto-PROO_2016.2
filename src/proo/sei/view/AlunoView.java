@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import proo.sei.exceptions.ViewException;
 
-public class AlunoView {
+public class AlunoView extends UsuarioView {
 	
 	private Scanner input = new Scanner(System.in);
 	
