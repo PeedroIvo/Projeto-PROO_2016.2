@@ -9,6 +9,21 @@ public class AdministradorBOTest {
 	AdministradorBO adminBO = new AdministradorBO();
 	
 	@Test
+	public void testeNaoValidaIdadeSeNegativo() {
+		assertFalse(adminBO.validaIdade(-1));
+	}
+	
+	@Test
+	public void testeNaoValidaIdadeSeMaiorQue100() {
+		assertFalse(adminBO.validaIdade(101));
+	}
+	
+	@Test
+	public void testeValidaIdadeSePositivoEMenorQue100() {
+		assertTrue(adminBO.validaIdade(10));
+	}
+	
+	@Test
 	public void testeNaoValidaSexoSeDiferenteDeFOuM() {
 		assertFalse(adminBO.validaSexo('0'));
 		assertFalse(adminBO.validaSexo(' '));
@@ -27,29 +42,46 @@ public class AdministradorBOTest {
 	}
 	
 	@Test
-	public void testeNaoValidaCPFSeConterLetras() {
+	public void testeNaoValidaCPFSeNaoConterApenasNumeros() {
 		assertFalse(adminBO.validaCPF("A1A2A3A4A5A"));
 	}
 	
 	@Test
-	public void testeValidaCPFSeTiver11NumerosENaoConterLetras() {
+	public void testeNaoValidaCPFSeForNegativo() {
+		assertFalse(adminBO.validaCPF("-12312312300"));
+	}
+	
+	@Test
+	public void testeValidaCPFSeTiver11NumerosEConterApenasNumerosENaoForNegativo() {
 		assertTrue(adminBO.validaCPF("12345678910"));
 	}
 	
 	@Test
-	public void testeNaoValidaRGSeNaoTiver8Numeros() {
-		assertFalse(adminBO.validaRG("0000"));
-		assertFalse(adminBO.validaRG("000000000000"));
-	}
-	
-	@Test
-	public void testeNaoValidaRGSeConterLetras() {
+	public void testeNaoValidaRGSeNaoContemApenasNumeros() {
 		assertFalse(adminBO.validaRG("A1A2A3A4"));
 	}
 	
 	@Test
-	public void testeValidaRGSeTiver8NumerosENaoConterLetras() {
+	public void testeNaoValidaRGSeForNegativo() {
+		assertFalse(adminBO.validaRG("-12345678"));
+	}
+	
+	@Test
+	public void testeValidaRGSeContemApenasNumerosENaoForNegativo() {
 		assertTrue(adminBO.validaRG("12345678"));
+	}
+	
+	@Test
+	public void testeNaoValidaEmailSeNaoCorresponderAoLayout() {
+		assertFalse(adminBO.validaEmail("admin"));
+		assertFalse(adminBO.validaEmail("admin@"));
+		assertFalse(adminBO.validaEmail("admin@admin"));
+		assertFalse(adminBO.validaEmail("admin@admin."));
+	}
+	
+	@Test
+	public void testeValidaEmailSeCorresponderAoLayout() {
+		assertTrue(adminBO.validaEmail("admin@admin.com"));
 	}
 	
 	@Test

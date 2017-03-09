@@ -9,9 +9,9 @@ import proo.sei.exceptions.ViewException;
 import proo.sei.vo.AlunoVO;
 import proo.sei.vo.ProfessorVO;
 
-public class AdministradorView extends UsuarioView{
-	private AdministradorBO adminBO = new AdministradorBO();
+public class AdministradorView {
 	private Scanner input = new Scanner(System.in);
+	private AdministradorBO adminBO = new AdministradorBO();
 	
 	public int interfaceMenu (String nome) {		
 		System.out.println("-------------------------------------");
@@ -54,6 +54,27 @@ public class AdministradorView extends UsuarioView{
 		return opcao;
 	}
 	
+	public int interfaceCod(String pedidoCod) {
+		Boolean erro;
+		int cod = 0;
+		
+		do {
+			erro = false;
+			
+			System.out.print(pedidoCod + ": ");		
+			
+			try {
+				cod = input.nextInt();
+			} catch (InputMismatchException e) {
+				System.out.println("Digite apenas números!");
+				input.next();
+				erro = true;
+			}
+		} while (erro);
+		
+		return cod;
+	}
+	
 	public String interfaceString(String campo) {
 		System.out.print(campo + ": ");
 		return input.nextLine();
@@ -65,15 +86,16 @@ public class AdministradorView extends UsuarioView{
 		
 		do {
 			erro = false;
-			System.out.print("Idade: ");			
+			System.out.print("Idade: ");					
 			
 			try {
 				idade = input.nextInt();
+				erro = !adminBO.validaIdade(idade);
 			} catch (InputMismatchException e) {
 				System.out.println("Digite apenas números!");
 				input.next();
 				erro = true;
-			}
+			}			
 		} while (erro);
 		
 		return idade;
@@ -85,6 +107,7 @@ public class AdministradorView extends UsuarioView{
 		do {
 			System.out.print("Sexo (F ou M): ");
 			sexo = input.next().charAt(0);
+			sexo = String.valueOf(sexo).toUpperCase().charAt(0);
 		} while (!adminBO.validaSexo(sexo));
 		
 		return sexo;
@@ -115,8 +138,10 @@ public class AdministradorView extends UsuarioView{
 	public String interfaceEmail() {
 		String email;
 		
-		System.out.print("Email: ");
-		email = input.next().toLowerCase();
+		do {
+			System.out.print("Email: ");
+			email = input.next().toLowerCase();
+		} while (!adminBO.validaEmail(email));
 		input.nextLine();
 		
 		return email;
@@ -183,6 +208,7 @@ public class AdministradorView extends UsuarioView{
 		do {
 			System.out.print("Turno (M ou V): ");
 			turno = input.next().charAt(0);
+			turno = String.valueOf(turno).toUpperCase().charAt(0);
 		} while (!adminBO.validaTurno(turno));
 		
 		return turno;
@@ -197,27 +223,6 @@ public class AdministradorView extends UsuarioView{
 		} while (!adminBO.validaLogin(conexao, login));
 		
 		return login;
-	}
-	
-	public int interfaceCod(String pedidoCod) {
-		Boolean erro;
-		int cod = 0;
-		
-		do {
-			erro = false;
-			
-			System.out.print(pedidoCod + ": ");		
-			
-			try {
-				cod = input.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
-		
-		return cod;
 	}
 	
 	public AlunoVO interfaceMatricularAluno(AlunoVO novoAluno) {

@@ -12,6 +12,7 @@ import proo.sei.dao.ProfessorDAO;
 import proo.sei.dao.TurmaDAO;
 import proo.sei.dao.UsuarioDAO;
 import proo.sei.exceptions.UsuarioBOException;
+import proo.sei.view.UsuarioView;
 import proo.sei.vo.AdministradorVO;
 import proo.sei.vo.AlunoVO;
 import proo.sei.vo.DadosPessoaisVO;
@@ -90,22 +91,16 @@ public abstract class UsuarioBO implements IMenu {
 		do {
 			System.out.print(pergunta);
 			resposta = input.next().charAt(0);
+			resposta = String.valueOf(resposta).toUpperCase().charAt(0);
 		} while (!validaRespostaConfirmar(resposta));
 
 		return resposta;
 	}
 	
 	public void mudarSenha(String login) {
-		String novaSenha;
-
-		do {
-			System.out.print("Digite a sua nova senha: ");
-			novaSenha = input.next();
-
-			if (novaSenha.length() < 6) {
-				System.out.println("A senha deve ter no mínimo 6 caracteres!");
-			}
-		} while (novaSenha.length() < 6);
+		UsuarioView usuarioView = new UsuarioView();
+		
+		String novaSenha = usuarioView.interfaceNovaSenha();
 
 		try {
 			this.usuarioDAO.updateSenha(conexao, login, novaSenha);
@@ -117,26 +112,15 @@ public abstract class UsuarioBO implements IMenu {
 
 	public String formataNota(double nota) {
 		String notaF = String.format("%.2f", nota);
-
 		return notaF;
 	}
 
 	public void visualizarDadosPessoais(int codUsuario, String nome) {
+		UsuarioView usuarioView = new UsuarioView();
+		
 		try {
 			DadosPessoaisVO dados = dadosDAO.procuraDadosPessoais(conexao, codUsuario);
-	
-			System.out.println("Nome: " + nome);
-			System.out.println("CPF: " + dados.getCpf());
-			System.out.println("RG: " + dados.getRg());
-			System.out.println("Email: " + dados.getEmail());
-			System.out.println("Telefone: " + dados.getTelefone());
-			System.out.println("Celular: " + dados.getCelular());
-			System.out.println("\nCEP: " + dados.getEndereco().getCep());
-			System.out.println("Rua: " + dados.getEndereco().getRua());
-			System.out.println("Número: " + dados.getEndereco().getnCasa());
-			System.out.println("Bairro: " + dados.getEndereco().getBairro());
-			System.out.println("Complemento: " + dados.getEndereco().getComplemento());
-			System.out.println("Cidade, Estado: " + dados.getEndereco().getCidade() + ", " + dados.getEndereco().getEstado() + "\n");
+			usuarioView.showDadosPessoais(nome, dados);
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}

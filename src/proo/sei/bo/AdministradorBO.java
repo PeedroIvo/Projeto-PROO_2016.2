@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import proo.sei.exceptions.UsuarioBOException;
 import proo.sei.view.AdministradorView;
@@ -26,6 +28,7 @@ public class AdministradorBO extends UsuarioBO {
 	@Override
 	public void menu(Connection conexao) {
 		AdministradorView adminView = new AdministradorView();
+		
 		this.setConexao(conexao);
 		int opcao;
 		
@@ -314,9 +317,29 @@ public class AdministradorBO extends UsuarioBO {
 		}
 	}
 	
+	public boolean validaEmail(String email)
+    {        
+        try {
+	        if (email != null && email.length() > 0) {
+	            String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+	            
+	            Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+	            Matcher matcher = pattern.matcher(email);
+	            
+	            if (!matcher.matches())
+	            	throw new UsuarioBOException ("Email inválido!");
+	        }
+        } catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+        
+        return true;
+    }
+	
 	public Boolean validaSexo (char sexo) {
 		try {				
-			if (sexo != 'M' && sexo != 'F')
+			if (sexo != 'M' && sexo != 'F') 
 				throw new UsuarioBOException ("Sexo Inválido! Selecione Feminino ou Masculino");				
 			
 		} catch (UsuarioBOException e) {
@@ -328,10 +351,12 @@ public class AdministradorBO extends UsuarioBO {
 	}
 	
 	public Boolean validaCPF (String CPF) {
-		try {
-			Long.parseLong(CPF);
+		try {			
+			Long numberCPF = Long.parseLong(CPF);
 			
-			if (CPF.length() != 11)
+			if (numberCPF < 0)
+				throw new UsuarioBOException ("O CPF não pode ser negativo!");
+			else if (!(CPF.length() == 11 && CPF.charAt(0) != '+'))
 				throw new UsuarioBOException ("O CPF deve conter 11 números!");
 			
 		} catch (UsuarioBOException e) {
@@ -347,10 +372,10 @@ public class AdministradorBO extends UsuarioBO {
 	
 	public boolean validaRG(String RG) {
 		try {
-			Long.parseLong(RG);
+			Long numberRG = Long.parseLong(RG);
 			
-			if (RG.length() != 8)
-				throw new UsuarioBOException ("O RG deve conter 8 números!");
+			if (numberRG < 0)
+				throw new UsuarioBOException ("O RG não pode ser negativo!");
 			
 		} catch (UsuarioBOException e) {
 			System.out.println(e.getMessage());
@@ -438,6 +463,22 @@ public class AdministradorBO extends UsuarioBO {
 			return false;
 		}
 				
+		return true;
+	}
+
+	public boolean validaIdade(int idade) {
+		try {				
+			if (idade < 0)
+				throw new UsuarioBOException ("A idade não pode ser negativa!");
+			else if (idade > 100) {
+				throw new UsuarioBOException ("Idade muito alta!");
+			}
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
 		return true;
 	}
 }

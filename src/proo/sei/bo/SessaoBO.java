@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import proo.sei.dao.conexao.ConexaoMySQL;
+import proo.sei.exceptions.SessaoBOException;
 import proo.sei.vo.AdministradorVO;
 import proo.sei.vo.AlunoVO;
 import proo.sei.vo.ProfessorVO;
@@ -88,5 +89,18 @@ public class SessaoBO {
 		}
 		
 		return false;
+	}
+	
+	public boolean validaOpcaoMenuInicial(int opcao) {
+		try {
+			if (opcao <= 0 || opcao > 2)
+				throw new SessaoBOException("Opção inválida! Tente novamente!");
+			
+		} catch (SessaoBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
 	}
 }

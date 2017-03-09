@@ -4,7 +4,6 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import proo.sei.bo.SessaoBO;
-import proo.sei.exceptions.ViewException;
 
 public class SessaoView {
 	private Scanner input = new Scanner(System.in);
@@ -23,29 +22,7 @@ public class SessaoView {
 		System.out.println("[1] Login");
 		System.out.println("[2] Sair");
 		
-		Boolean erro;
-		int opcao = 0;
-		
-		do {
-			erro = false;
-			System.out.print("Digite sua opção: ");			
-			
-			try {
-				opcao = this.input.nextInt();
-				
-				if (opcao <= 0 || opcao > 2) {
-					throw new ViewException("Opção inválida! Tente novamente!");
-				}
-			} catch (InputMismatchException e) {
-				System.out.println("Opção inválida! Tente novamente!");
-				input.next();
-				erro = true;
-			} catch (ViewException e) {
-				System.out.println(e.getMessage());
-				erro = true;
-			}
-		} while (erro);
-		
+		int opcao = interfaceMenuInicial();		
 		System.out.println();
 		
 		if(opcao == 1) {
@@ -71,5 +48,27 @@ public class SessaoView {
 		} while (!sessaoBO.validarLogin(sessaoBO.getConexao(), loginDigitado.toLowerCase(), senhaDigitada));
 		
 		System.out.println();
+	}
+	
+	public int interfaceMenuInicial() {
+		Boolean erro;
+		int opcao = 0;
+		
+		do {
+			erro = false;
+			System.out.print("Digite sua opção: ");			
+			
+			try {
+				opcao = this.input.nextInt();
+				erro = !sessaoBO.validaOpcaoMenuInicial(opcao);
+				
+			} catch (InputMismatchException e) {
+				System.out.println("Opção inválida! Tente novamente!");
+				input.next();
+				erro = true;
+			}
+		} while (erro);
+		
+		return opcao;
 	}
 }

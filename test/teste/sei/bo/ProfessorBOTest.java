@@ -29,7 +29,7 @@ public class ProfessorBOTest {
 	@Test
 	public void testeValidarespostaSeIgualASOuN() {
 		assertTrue(professorBO.validaRespostaConfirmar('S'));
-		assertTrue(professorBO.validaRespostaConfirmar('N'));
+		assertTrue(professorBO.validaRespostaConfirmar('n'));
 	}
 	
 	@Test
@@ -41,7 +41,7 @@ public class ProfessorBOTest {
 	@Test
 	public void testeValidaTurnoSeIgualAMOuV() {
 		assertTrue(professorBO.validaTurno('V'));
-		assertTrue(professorBO.validaTurno('M'));
+		assertTrue(professorBO.validaTurno('m'));
 	}
 	
 	@Test

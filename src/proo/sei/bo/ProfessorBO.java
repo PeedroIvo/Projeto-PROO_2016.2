@@ -2,7 +2,6 @@ package proo.sei.bo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
 import java.util.List;
 
 import proo.sei.exceptions.UsuarioBOException;
@@ -12,10 +11,7 @@ import proo.sei.vo.DisciplinaVO;
 import proo.sei.vo.NotaVO;
 import proo.sei.vo.ProfessorVO;
 
-public class ProfessorBO extends UsuarioBO {
-	
-	ProfessorView professorView = new ProfessorView(); 
-	
+public class ProfessorBO extends UsuarioBO {	
 	public ProfessorBO() {
 
 	}
@@ -26,6 +22,8 @@ public class ProfessorBO extends UsuarioBO {
 
 	@Override
 	public void menu(Connection conexao) {
+		ProfessorView professorView = new ProfessorView();
+		
 		this.setConexao(conexao);
 		int opcao;
 		
@@ -71,48 +69,17 @@ public class ProfessorBO extends UsuarioBO {
 	}
 	
 	public void addNotas() {
-		Boolean erro;
+		ProfessorView professorView = new ProfessorView();
 		
-		int codDisciplina = 0;
-		
-		do {
-			erro = false;
-			System.out.print("Digite o cógido da disciplina: ");			
-			
-			try {
-				codDisciplina = this.input.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);		
+		int codDisciplina = professorView.interfaceCod("Digite o cógido da disciplina: ");	
 		
 		try {
 			if(this.verificaDisciplinaProfessor(codDisciplina)) {
 				DisciplinaVO disciplina = disciplinaDAO.procuraDisciplina(conexao, codDisciplina);
 				
-				char turno;
-				do {
-					System.out.print("Digite o turno da turma (M ou V): ");
-					turno = input.next().charAt(0);
-				} while (!validaTurno(turno));
+				char turno = professorView.interfaceTurno();
 				
-				
-				int bimestre = 0;			
-				do {
-					erro = false;
-					System.out.print("Digite o bimestre correspondente as notas: (1, 2, 3 ou 4): ");			
-					
-					try {
-						bimestre = input.nextInt();
-						erro = !validaBimestre(bimestre);
-					} catch (InputMismatchException e) {
-						System.out.println("Digite apenas números!");
-						input.next();
-						erro = true;
-					}
-				} while (erro);
+				int bimestre = professorView.interfaceBimestre();			
 				
 				int codTurma = turmaDAO.procuraCodTurma(conexao, disciplina.getSerie(), turno);
 				
@@ -127,16 +94,7 @@ public class ProfessorBO extends UsuarioBO {
 					
 					if(notas.isEmpty()){
 						for(AlunoVO aluno:alunos){
-							double nota;
-							
-							do {
-								System.out.print("[" + aluno.getCodUsuario() + "] Nome do aluno: " + aluno.getNome() + " | Digite a nota: ");
-								nota = input.nextDouble();
-								
-								if (nota < 0 || nota > 10) {
-									System.out.println("Nota inválida! A nota deverá ser de 0 à 10");
-								}
-							} while (nota < 0 || nota > 10);
+							double nota = professorView.interfaceNota(aluno.getCodUsuario(), aluno.getNome());
 							
 							notaDAO.criar(conexao, aluno.getCodUsuario(), codDisciplina, bimestre, nota);
 						}
@@ -173,33 +131,15 @@ public class ProfessorBO extends UsuarioBO {
 	}
 	
 	public void visualizarNotas() {
-		Boolean erro;
+		ProfessorView professorView = new ProfessorView();
 		
-		int codDisciplina = 0;
-		do {
-			erro = false;
-			System.out.print("Digite o cógido da disciplina: ");			
-			
-			try {
-				codDisciplina = this.input.nextInt();
-			} catch (InputMismatchException e) {
-				System.out.println("Digite apenas números!");
-				input.next();
-				erro = true;
-			}
-		} while (erro);
+		int codDisciplina = professorView.interfaceCod("Digite o cógido da disciplina: ");
 		
 		try {
 			if(this.verificaDisciplinaProfessor(codDisciplina)) {
 				DisciplinaVO disciplina = disciplinaDAO.procuraDisciplina(conexao, codDisciplina);
 				
-				char turno;
-				do {
-					System.out.print("Digite o turno da turma (M ou V): ");
-					turno = input.next().charAt(0);
-				} while (!validaTurno(turno));
-				
-				
+				char turno = professorView.interfaceTurno();				
 				int codTurma = turmaDAO.procuraCodTurma(conexao, disciplina.getSerie(), turno);
 				
 				List<AlunoVO> alunos = alunoDAO.listarPorTurma(conexao, codTurma);
