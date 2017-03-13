@@ -1,12 +1,11 @@
 package teste.sei.bo;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
+import junit.framework.TestCase;
 import proo.sei.bo.ProfessorBO;
 
-public class ProfessorBOTest {
+public class ProfessorBOTest extends TestCase {
 	ProfessorBO professorBO = new ProfessorBO();
 	
 	@Test

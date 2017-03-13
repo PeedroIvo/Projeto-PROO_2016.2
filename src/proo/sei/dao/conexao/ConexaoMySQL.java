@@ -17,8 +17,10 @@ public class ConexaoMySQL implements IConexao {
 			conexao = DriverManager.getConnection(baseDados + "://" + enderecoBanco + "/" + nomeBanco, usuario, senha);
 		} catch (CommunicationsException e) {
 			System.err.println("Erro: A comunicação com o banco de dados falhou!");
+			System.exit(0);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println("Erro ao conectar: " + e.getMessage());
+			System.exit(0);
 		}
 		return conexao;
 	}
@@ -27,7 +29,7 @@ public class ConexaoMySQL implements IConexao {
 		try {
 			ConexaoMySQL.conexao.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println("Erro ao fechar a conexão: " + e.getMessage());
 		}
 	}
 

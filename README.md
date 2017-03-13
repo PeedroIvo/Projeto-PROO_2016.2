@@ -1,8 +1,6 @@
 # Projeto-PROO
 Projeto de Programação Orientada a Objetos - IFAL 2016.2
 
-Aluno: Pedro Ivo Mariano de Oliveira Barros
-
 Sistema Escola Integrada (SEI)
 
 Descrição: Sistema que auxilia na organização do sistema acadêmico de escolas.

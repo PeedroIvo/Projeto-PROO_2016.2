@@ -1,11 +1,12 @@
 package teste.sei.bo;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import junit.framework.TestCase;
 
 import proo.sei.bo.AdministradorBO;
 
-public class AdministradorBOTest {
+public class AdministradorBOTest extends TestCase {
 	AdministradorBO adminBO = new AdministradorBO();
 	
 	@Test

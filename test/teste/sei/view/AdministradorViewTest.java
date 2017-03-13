@@ -1,12 +1,11 @@
 package teste.sei.view;
 
-import static org.junit.Assert.assertFalse;
-
 import org.junit.Test;
 
+import junit.framework.TestCase;
 import proo.sei.view.AdministradorView;
 
-public class AdministradorViewTest {
+public class AdministradorViewTest extends TestCase {
 	AdministradorView admin = new AdministradorView();
 	
 	@Test

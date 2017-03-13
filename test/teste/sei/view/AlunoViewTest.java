@@ -1,12 +1,11 @@
 package teste.sei.view;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
+import junit.framework.TestCase;
 import proo.sei.view.AlunoView;
 
-public class AlunoViewTest {
+public class AlunoViewTest extends TestCase {
 	AlunoView aluno = new AlunoView();
 	
 	@Test
