@@ -10,18 +10,17 @@ public class ConexaoMySQL implements IConexao {
 	static Connection conexao;
 
 	@Override
-	public synchronized Connection getConexao(String baseDados, String enderecoBanco, String nomeBanco, String usuario,
-			String senha) {
+	public synchronized Connection getConexao(String baseDados, String enderecoBanco, String nomeBanco, String usuario, String senha) {
 		conexao = null;
+		
 		try {
 			conexao = DriverManager.getConnection(baseDados + "://" + enderecoBanco + "/" + nomeBanco, usuario, senha);
 		} catch (CommunicationsException e) {
 			System.err.println("Erro: A comunicação com o banco de dados falhou!");
-			System.exit(0);
 		} catch (SQLException e) {
 			System.err.println("Erro ao conectar: " + e.getMessage());
-			System.exit(0);
 		}
+		
 		return conexao;
 	}
 

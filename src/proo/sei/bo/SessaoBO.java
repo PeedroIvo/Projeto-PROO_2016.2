@@ -44,6 +44,19 @@ public class SessaoBO {
 		this.mysql.fecharConexao();
 	}
 	
+	public boolean validaOpcaoMenuInicial(int opcao) {
+		try {
+			if (opcao <= 0 || opcao > 2)
+				throw new SessaoBOException("Opção inválida! Tente novamente!");
+			
+		} catch (SessaoBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
 	public boolean validarLogin(Connection conexao, String loginDigitado, String senhaDigitada) {
 		try (PreparedStatement stmt = conexao.prepareStatement("select * from usuario where login='" + loginDigitado + "'");
 				ResultSet rs = stmt.executeQuery();) {
@@ -89,18 +102,5 @@ public class SessaoBO {
 		}
 		
 		return false;
-	}
-	
-	public boolean validaOpcaoMenuInicial(int opcao) {
-		try {
-			if (opcao <= 0 || opcao > 2)
-				throw new SessaoBOException("Opção inválida! Tente novamente!");
-			
-		} catch (SessaoBOException e) {
-			System.out.println(e.getMessage());
-			return false;
-		}
-		
-		return true;
 	}
 }

@@ -7,7 +7,6 @@ import proo.sei.bo.SessaoBO;
 
 public class SessaoView {
 	private Scanner input = new Scanner(System.in);
-	
 	private SessaoBO sessaoBO = new SessaoBO();
 	
 	public SessaoBO getSessaoBO() {

@@ -1,21 +1,25 @@
 package proo.sei.view;
 
-import java.sql.SQLException;
+import java.sql.Connection;
 
 public class Index {
 
-	public static void main(String[] args) throws SQLException { 
+	public static void main(String[] args) { 
 		SessaoView sessaoView = new SessaoView();
 		
-		boolean statusSessao;
+		Connection conexao = sessaoView.getSessaoBO().getConexao();
 		
-		do {
-			statusSessao = sessaoView.iniciarSessao();
+		if (conexao != null) {
+			boolean statusSessao;
 			
-			if (statusSessao) {
-				sessaoView.getSessaoBO().getUsuarioBOAtual().menu(sessaoView.getSessaoBO().getConexao());
-			}
-		} while (statusSessao);
+			do {
+				statusSessao = sessaoView.iniciarSessao();
+				
+				if (statusSessao) {
+					sessaoView.getSessaoBO().getUsuarioBOAtual().menu(conexao);
+				}
+			} while (statusSessao);
+		}
 	}
 }
 
