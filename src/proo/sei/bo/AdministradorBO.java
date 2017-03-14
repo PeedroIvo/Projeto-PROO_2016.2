@@ -376,6 +376,8 @@ public class AdministradorBO extends UsuarioBO {
 			
 			if (numberRG < 0)
 				throw new UsuarioBOException ("O RG não pode ser negativo!");
+			else if (!(RG.length() <= 20 && RG.charAt(0) != '+'))
+				throw new UsuarioBOException ("RG inválido!");
 			
 		} catch (UsuarioBOException e) {
 			System.out.println(e.getMessage());
@@ -408,9 +410,11 @@ public class AdministradorBO extends UsuarioBO {
 	
 	public boolean validaCEP(String CEP) {
 		try {
-			Long.parseLong(CEP);
+			Long numberCEP = Long.parseLong(CEP);
 			
-			if (CEP.length() != 8)
+			if (numberCEP < 0)
+				throw new UsuarioBOException ("O CEP não pode ser negativo!");
+			if (!(CEP.length() == 8 && CEP.charAt(0) != '+'))
 				throw new UsuarioBOException ("O CEP deve conter 8 números!");
 			
 		} catch (UsuarioBOException e) {
