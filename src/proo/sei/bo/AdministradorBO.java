@@ -376,8 +376,8 @@ public class AdministradorBO extends UsuarioBO {
 			
 			if (numberRG < 0)
 				throw new UsuarioBOException ("O RG não pode ser negativo!");
-			else if (!(RG.length() <= 20 && RG.charAt(0) != '+'))
-				throw new UsuarioBOException ("RG inválido!");
+			else if (!(RG.length() <= 15 && RG.charAt(0) != '+'))
+				throw new UsuarioBOException ("RG inválido, muito longo!");
 			
 		} catch (UsuarioBOException e) {
 			System.out.println(e.getMessage());

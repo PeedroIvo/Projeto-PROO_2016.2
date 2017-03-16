@@ -93,24 +93,31 @@ public class ProfessorView {
 		char turno;
 
 		do {
-			System.out.print("Digite o turno da turma (M ou V): ");
+			System.out.print("Turno (M ou V): ");
 			turno = input.next().charAt(0);
+			turno = String.valueOf(turno).toUpperCase().charAt(0);
 		} while (!professorBO.validaTurno(turno));
 		
 		return turno;
 	}
 	
 	public double interfaceNota(int codUsuario, String nome) {
-		double nota;
+		Boolean erro;		
+		double nota = 0;
 		
 		do {
+			erro = false;
 			System.out.print("[" + codUsuario + "] Nome do aluno: " + nome + " | Digite a nota: ");
-			nota = input.nextDouble();
 			
-			if (nota < 0 || nota > 10) {
-				System.out.println("Nota inválida! A nota deverá ser de 0 à 10");
+			try {
+				nota = input.nextDouble();
+				erro = !professorBO.validaNota(nota);
+			} catch (InputMismatchException e) {
+				System.out.println("Digite apenas números!");
+				input.next();
+				erro = true;
 			}
-		} while (nota < 0 || nota > 10);
+		} while (erro);
 		
 		return nota;
 	}

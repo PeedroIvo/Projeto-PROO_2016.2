@@ -202,10 +202,23 @@ public class ProfessorBO extends UsuarioBO {
 		}
 	}
 	
-	public Boolean validaBimestre (int bimestre) {
+	public Boolean validaBimestre(int bimestre) {
 		try {				
 			if (bimestre != 1 && bimestre != 2 && bimestre != 3 && bimestre != 4)
 				throw new UsuarioBOException ("Bimestre inválido! Selecione 1, 2, 3 ou 4");				
+			
+		} catch (UsuarioBOException e) {
+			System.out.println(e.getMessage());
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public Boolean validaNota(double nota) {
+		try {				
+			if (nota < 0 || nota > 10)
+				throw new UsuarioBOException ("Nota inválida! A nota deverá ser de 0 à 10");				
 			
 		} catch (UsuarioBOException e) {
 			System.out.println(e.getMessage());
