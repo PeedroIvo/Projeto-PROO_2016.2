@@ -93,7 +93,7 @@ public class ProfessorView {
 		char turno;
 
 		do {
-			System.out.print("Turno (M ou V): ");
+			System.out.print("Digite o turno da turma (M ou V): ");
 			turno = input.next().charAt(0);
 			turno = String.valueOf(turno).toUpperCase().charAt(0);
 		} while (!professorBO.validaTurno(turno));
